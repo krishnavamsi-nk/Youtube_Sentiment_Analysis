@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 from predict import predict_sentiments
 from youtube import get_video_comments
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -55,4 +56,5 @@ def index():
 
 if __name__ == '__main__':
     print("🚀 Flask server is starting...")  # Debugging
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use PORT from Render
+    app.run(host="0.0.0.0", port=port, debug=True)
