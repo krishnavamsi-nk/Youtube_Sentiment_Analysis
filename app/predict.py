@@ -3,16 +3,35 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pickle
+import gdown
+import os
 
 VOCAB_SIZE = 10000
 MAX_LEN = 250
-MODEL_PATH = '../sentiment_analysis_model.keras'
+# Define Google Drive file IDs (replace with your actual file IDs)
+MODEL_DRIVE_ID = "1NPeTOQKzjXYO5xiqJrczrXU1JAq2yjid"
+TOKENIZER_DRIVE_ID = "1c_LQA1wDXq9Z3RmYUF3WT6e8fh8JUqqD"
+
+# Define local paths
+MODEL_PATH = "../sentiment_analysis_model.keras"
+TOKENIZER_PATH = "../tokenizer.pickle"
+
+
+
+# Function to download files if they don’t exist
+def download_file(drive_id, output_path):
+    if not os.path.exists(output_path):
+        gdown.download(f"https://drive.google.com/uc?id={drive_id}", output_path, quiet=False)
+
+# Download model and tokenizer if not available locally
+download_file(MODEL_DRIVE_ID, MODEL_PATH)
+download_file(TOKENIZER_DRIVE_ID, TOKENIZER_PATH)
 
 # Load the saved model
 model = load_model(MODEL_PATH)
 
 # Load the tokenizer
-with open('../tokenizer.pickle', 'rb') as handle:
+with open(TOKENIZER_PATH, 'rb') as handle:
     tokenizer = pickle.load(handle)
 
 print(len(tokenizer.word_index))  # Check vocabulary size
